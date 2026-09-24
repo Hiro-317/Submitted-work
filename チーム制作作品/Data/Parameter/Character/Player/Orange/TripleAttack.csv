@@ -1,0 +1,15 @@
+AttackNextStageContinueTime,60
+CoolTime,30
+AttackMoveSpeed,10
+TargetSerchRange,200
+CollSize1,60
+CollSize2,60
+CollSize3,80
+CollLocalPos,0,0,80
+AttackRatePercent,100
+CollStartTime1,0.8
+CollEndTime1,1
+CollStartTime2,0.8
+CollEndTime2,1
+CollStartTime3,0.4
+CollEndTime3,0.6

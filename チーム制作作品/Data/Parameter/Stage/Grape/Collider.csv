@@ -1,0 +1,13 @@
+WallCollSize,3000,10000,1000
+WallCollYAngle1,0
+WallCollYAngle2,45
+WallCollYAngle3,90
+WallCollYAngle4,135
+WallCollPos1,0,500,2500
+WallCollPos2,2050,500,1750
+WallCollPos3,3000,500,0
+WallCollPos4,2250,500,-1750
+WallCollPos5,-2050,500,1750
+WallCollPos6,-3000,500,0
+WallCollPos7,-2250,500,-1750
+WallCollPos8,0,500,-2700

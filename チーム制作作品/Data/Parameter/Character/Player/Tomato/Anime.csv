@@ -1,0 +1,10 @@
+IdleAnimeSpeed,1
+WalkAnimeSpeed,1
+RunAnimeSpeed,1
+Punch1AnimeSpeed,1.5
+Punch2AnimeSpeed,1.5
+Punch3AnimeSpeed,1.5
+KickAnimeSpeed,1.5
+DodgeAnimeSpeed,2
+DamageAnimeSpeed,1.5
+DeathAnimeSpeed,1

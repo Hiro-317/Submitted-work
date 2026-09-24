@@ -1,0 +1,8 @@
+CoolTime,240
+AttackMoveSpeed,10
+AttackRatePercent,350
+TargetSerchRange,200
+CollLocalPos,0,0,100
+CollSize,80
+CollStartTime,0.4
+CollEndTime,0.6

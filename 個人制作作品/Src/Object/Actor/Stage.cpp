@@ -1,0 +1,106 @@
+#include <DxLib.h>
+#include "../../Application.h"
+#include "../../Utility/Utility.h"
+#include "../../Utility/AngleUtility.h"
+#include "../Collider/ColliderModel.h"
+#include "Stage.h"
+
+
+Stage::Stage(void)
+{
+}
+
+Stage::~Stage(void)
+{
+}
+
+void Stage::InitLoad(void)
+{
+	// 外部ファイルの３Ｄモデルをロード
+	transform_.SetModel(MV1LoadModel((Application::PATH_MODEL + "Stage.mv1").c_str()));
+}
+
+void Stage::InitTransform(void)
+{
+	transform_.pos = { 0.0f, -180.0f, 0.0f };
+	transform_.rot = transform_.localRot = Utility::VECTOR_ZERO;
+	transform_.scl = VScale(Utility::VECTOR_ONE, 2.0f);
+}
+
+void Stage::InitCollider(void)
+{
+	// モデルコライダ
+	ColliderModel* colModel = new ColliderModel(&transform_);
+	ownColliders_.emplace(COLLIDER_TAG::MODEL, colModel);
+}
+
+void Stage::Draw(void) const
+{
+	//裏側が見えるためバックカリングを有効に
+	SetUseBackCulling(false);
+	//透明モデルをフレームごとに描画
+	// なければ書かない
+	if (opacityIndex.size() == 0) {
+		
+		return;
+	}
+	else {
+		// 不透明になってるインデックスのフレームを書く
+		for (int i : opacityIndex) {
+	
+			MV1DrawFrame(transform_.modelId, i);
+		}
+	}
+	SetUseBackCulling(true);
+}
+
+void Stage::DrawModel(void) const
+{
+	// コピーを作る
+	std::vector<int> copyIndex = opacityIndex;
+
+	//不透明モデルをフレームごとに描画
+	for (int i = 0; i < MV1GetFrameNum(transform_.modelId); i++) {
+		// 透明モデルがなければモデルを書いて終わり
+		if (opacityIndex.size() == 0) {
+
+			MV1DrawModel(transform_.modelId);
+			return;
+		}
+		else {
+			bool opaFlg = false;
+			for (auto j = copyIndex.begin(); j != copyIndex.end();) {
+				if (i == *j) {
+
+					opaFlg = true;
+					j = copyIndex.erase(j);
+				}
+				else {
+					j++;
+				}
+			}
+			if (!opaFlg) {
+
+				MV1DrawFrame(transform_.modelId, i);
+			}
+		}
+	}
+}
+
+void Stage::SetOpacityIndex(std::vector<int> index)
+{
+	//透明フレームを不透明に
+	for (int i = 0; i < opacityIndex.size(); i++) {
+
+		MV1SetFrameOpacityRate(transform_.modelId, opacityIndex.at(i), 1.0f);
+	}
+
+	// 透明インデックスを更新
+	opacityIndex = index;
+
+	//不透明フレームを透明に
+	for (int i = 0; i < opacityIndex.size(); i++) {
+
+		MV1SetFrameOpacityRate(transform_.modelId, opacityIndex.at(i), 0.5f);
+	}
+}
