@@ -1,0 +1,12 @@
+KickAnimeSpeed,0.5
+JumpStartAnimeSpeed,0.8
+JumpingAnimeSpeed,1
+DownAnimeSpeed,1
+DamageAnimeSpeed,1
+DownThrowAnimeSpeed,1
+DeathAnimeSpeed,0.5
+OverhandAnimeSpeed,0.3
+RunAnimeSpeed,1
+IdleAnimeSpeed,1
+StampAnimeSpeed,2
+WalkAnimeSpeed,1

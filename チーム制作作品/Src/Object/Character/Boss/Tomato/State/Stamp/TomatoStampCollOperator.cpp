@@ -1,0 +1,86 @@
+#include "TomatoStampCollOperator.h"
+
+#include "../../../../../Common/Collider/XZCircleCollider.h"
+
+TomatoStampCollOperator::TomatoStampCollOperator
+(
+	float ATTACK_RADIUS,
+	const bool& isGround,
+	const MSG_SENDER_ID operatorSenderId,
+	const CharacterStats& stats,
+	const ParameterLoad& collParam
+)	: 
+	ATTACK_RADIUS(ATTACK_RADIUS),
+	ground(isGround),
+	operatorSenderId(operatorSenderId),
+	stats(stats),
+	SCALE(collParam.GetParameterToVector3("Stamp","Scale")),
+	HEIGHT(collParam.GetParameter("Stamp","Height")),
+	collBack(), collFront()
+{
+	isDrawArea = false;
+	trans.pos = Vector3(-1, -1, -1);
+}
+
+void TomatoStampCollOperator::Load(void)
+{
+	trans.pos = Vector3();
+
+	// 動的オブジェクトとしての挙動を無効にする
+	SetDynamicFlg(true);
+
+	// 重力を無効にする
+	SetGravityFlg(false);
+
+	// 衝突時の押し出しを無効にする
+	SetPushFlg(false);
+
+#pragma endregion
+
+	// 当たり判定情報を生成する
+	ColliderCreate(new XZCircleCollider(COLLIDER_TAG::BOSS_ATTACK_AREA, ATTACK_RADIUS, 1000.0f));
+	ColliderCreate(new XZCircleCollider(COLLIDER_TAG::BOSS_ATTACK, ATTACK_RADIUS, 1000.0f));
+	SetJudge(false);
+
+	// 攻撃範囲の当たり判定
+	ColliderSerch(GetCollider(), COLLIDER_TAG::BOSS_ATTACK_AREA).back()->SetDynamicFlg(true);
+	ColliderSerch(GetCollider(), COLLIDER_TAG::BOSS_ATTACK_AREA).back()->SetPushFlg(true);
+	ColliderSerch(GetCollider(), COLLIDER_TAG::BOSS_ATTACK_AREA).back()->SetJudgeFlg(true);
+
+	CreateAttackSkill(operatorSenderId, 100, &stats, COLLIDER_TAG::BOSS_ATTACK);
+
+	collBack.Load("Range/CircleRangeBack");
+	collFront.Load("Range/CircleRangeFront");
+
+	collBack.pos = Vector3::Yonly(HEIGHT);
+	collFront.pos = Vector3::Yonly(HEIGHT + 1.0f);
+
+	collBack.scale = SCALE;
+	collFront.scale = Vector3(0);
+}
+
+void TomatoStampCollOperator::SubUpdate(void)
+{
+	// 押し戻された場所にすべて移動させる
+	auto pos = ColliderSerch(GetCollider(), COLLIDER_TAG::BOSS_ATTACK_AREA).back()->GetPos();
+	ColliderSerch(GetCollider(), COLLIDER_TAG::BOSS_ATTACK).back()->SetTransformPos(pos);
+	collBack.pos = pos;
+	collFront.pos = pos;
+	trans.pos.y = HEIGHT;
+}
+
+void TomatoStampCollOperator::SubAlphaDraw(void)
+{
+	if (isDrawArea) {
+		SetUseLighting(false);
+		collBack.Draw();
+		collFront.Draw();
+		SetUseLighting(true);
+	}
+}
+
+void TomatoStampCollOperator::SubRelease(void)
+{
+	collFront.Release();
+	collBack.Release();
+}

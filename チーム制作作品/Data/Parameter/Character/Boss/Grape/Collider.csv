@@ -1,0 +1,5 @@
+CollisionPushWeight,255
+ToPlayerDistanceHeight,750
+ToPlayerDistanceRadius,200
+LineColliderStartPos,0,0,0
+LineColliderEndPos,0,-120,0

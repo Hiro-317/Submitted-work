@@ -1,0 +1,84 @@
+#pragma once
+#include <string>
+#include <DxLib.h>
+
+
+class FpsControll;
+
+class Application
+{
+public:
+
+	static constexpr int FPS = 60;
+
+	// スクリーンサイズ
+	static constexpr int SCREEN_SIZE_X = 1920;
+	static constexpr int SCREEN_SIZE_Y = 1060;
+	static constexpr int SCREEN_SIZE_X_HALF = SCREEN_SIZE_X / 2;
+	static constexpr int SCREEN_SIZE_Y_HALF = SCREEN_SIZE_Y / 2;
+
+	// データパス関連
+	//-------------------------------------------
+	static const std::string PATH_DATA;
+	static const std::string PATH_IMAGE;
+	static const std::string PATH_MODEL;
+	static const std::string PATH_ANIMATION;
+	static const std::string PATH_EFFECT;
+	static const std::string PATH_SOUND;
+	static const std::string PATH_FONT;
+	static const std::string PATH_CSV;
+	static const std::string PATH_VIDEO;
+	static const std::string PATH_SHADER;
+	//-------------------------------------------
+
+	// インスタンスを明示的に生成
+	static void CreateInstance(void);
+
+	// インスタンスの取得
+	static Application& GetInstance(void);
+
+	// 初期化
+	void Init(void);
+
+	// ゲームループの開始
+	void Run(void);
+
+	// リソースの破棄
+	void Destroy(void);
+
+	// 初期化成功／失敗の判定
+	bool IsInitFail(void) const;
+
+	// 解放成功／失敗の判定
+	bool IsReleaseFail(void) const;
+
+	//終わらせる
+	void FinishGame(void) { isFinish_ = true; }
+
+private:
+
+	// 静的インスタンス
+	static Application* instance_;
+
+	FpsControll* fpsControll_;
+
+	// 初期化失敗
+	bool isInitFail_;
+
+	// 解放失敗
+	bool isReleaseFail_;
+
+	bool isFinish_;
+
+	// デフォルトコンストラクタをprivateにして、
+	// 外部から生成できない様にする
+	Application(void);
+
+	// コピーコンストラクタも同様
+	Application(const Application& instance) = default;
+
+	// デストラクタも同様
+	~Application(void) = default;
+
+	void InitEffekseer(void);
+};
